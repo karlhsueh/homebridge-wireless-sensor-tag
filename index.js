@@ -22,6 +22,7 @@ function WirelessTagPlatform(log, config) {
     this.log = log;
     this.motionSensors = (config.motionSensors == undefined) ? [] : config.motionSensors;
     this.contactSensors = (config.contactSensors == undefined) ? [] : config.contactSensors;
+    this.humidityOnlySensors = (config.humidityOnlySensors == undefined) ? [] : config.humidityOnlySensors;
 }
 
 WirelessTagPlatform.prototype = {

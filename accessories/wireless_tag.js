@@ -33,40 +33,44 @@ function WirelessTagAccessory(platform, device) {
     
     var that = this;
     
-    // Motion
-    if (platform.motionSensors.indexOf(that.device.name) >= 0) {
-        this.addService(Service.MotionSensor)
-            .getCharacteristic(Characteristic.MotionDetected)
+    //hide motion/contact/temperature if device is in humidity only
+    if (platform.humidityOnlySensors.indexOf(that.device.name) == 0) {
+
+        // Motion
+        if (platform.motionSensors.indexOf(that.device.name) >= 0) {
+            this.addService(Service.MotionSensor)
+                .getCharacteristic(Characteristic.MotionDetected)
+                .on('get', function(callback) {
+                callback(null, that.device.eventState === EventState.DETECTED_MOVEMENT || that.device.eventState === EventState.MOVED);
+            });
+        }
+        
+        // Contact
+        if (platform.contactSensors.indexOf(that.device.name) >= 0) {
+            this.addService(Service.ContactSensor)
+                .getCharacteristic(Characteristic.ContactSensorState)
+                .on('get', function(callback) {
+                if (that.device.eventState === EventState.OPENED || that.device.lightEventState === LightState.TOO_BRIGHT) {
+                    callback(null, Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
+                }
+                else {
+                    callback(null, Characteristic.ContactSensorState.CONTACT_DETECTED);
+                }
+                        
+            });
+        }
+        
+        // Temperature
+        this.addService(Service.TemperatureSensor)
+            .getCharacteristic(Characteristic.CurrentTemperature)
+            .setProps({
+                minValue: -100,
+                maxValue: 100
+            })
             .on('get', function(callback) {
-            callback(null, that.device.eventState === EventState.DETECTED_MOVEMENT || that.device.eventState === EventState.MOVED);
+            callback(null, that.device.temperature);
         });
     }
-    
-    // Contact
-    if (platform.contactSensors.indexOf(that.device.name) >= 0) {
-        this.addService(Service.ContactSensor)
-            .getCharacteristic(Characteristic.ContactSensorState)
-            .on('get', function(callback) {
-            if (that.device.eventState === EventState.OPENED || that.device.lightEventState === LightState.TOO_BRIGHT) {
-                callback(null, Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
-            }
-            else {
-                callback(null, Characteristic.ContactSensorState.CONTACT_DETECTED);
-            }
-                    
-        });
-    }
-    
-    // Temperature
-    this.addService(Service.TemperatureSensor)
-        .getCharacteristic(Characteristic.CurrentTemperature)
-        .setProps({
-            minValue: -100,
-            maxValue: 100
-        })
-        .on('get', function(callback) {
-        callback(null, that.device.temperature);
-    });
 
     // Humidity
     this.addService(Service.HumiditySensor)
@@ -102,24 +106,29 @@ var getServices = function() {
 }
 
 var loadData = function() {
-    // Motion
-    if (this.platform.motionSensors.indexOf(this.name) >= 0) {
-        this.getService(Service.MotionSensor)
-            .getCharacteristic(Characteristic.MotionDetected)
+
+    //hide motion/contact/temperature if device is in humidity only
+    if (this.platform.humidityOnlySensors.indexOf(this.name) == 0) {
+
+        // Motion
+        if (this.platform.motionSensors.indexOf(this.name) >= 0) {
+            this.getService(Service.MotionSensor)
+                .getCharacteristic(Characteristic.MotionDetected)
+                .getValue();
+        }
+        
+        // Contact
+        if (this.platform.contactSensors.indexOf(this.name) >= 0) {
+            this.getService(Service.ContactSensor)
+                .getCharacteristic(Characteristic.ContactSensorState)
+                .getValue();
+        }
+        
+        // Temperature
+        this.getService(Service.TemperatureSensor)
+            .getCharacteristic(Characteristic.CurrentTemperature)
             .getValue();
     }
-    
-    // Contact
-    if (this.platform.contactSensors.indexOf(this.name) >= 0) {
-        this.getService(Service.ContactSensor)
-            .getCharacteristic(Characteristic.ContactSensorState)
-            .getValue();
-    }
-    
-    // Temperature
-    this.getService(Service.TemperatureSensor)
-        .getCharacteristic(Characteristic.CurrentTemperature)
-        .getValue();
 
     // Humidity
     this.getService(Service.HumiditySensor)

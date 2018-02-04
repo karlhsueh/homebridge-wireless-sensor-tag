@@ -22,7 +22,8 @@ Configuration sample:
             "token": "abc123",
             "queryFrequency": 20000,
             "motionSensors": [],
-            "contactSensors": ["Mailbox"]
+            "contactSensors": ["Mailbox"],
+            "humidityOnlySensors" []    //for use of water-sensors
         }
     ] 
 ```
