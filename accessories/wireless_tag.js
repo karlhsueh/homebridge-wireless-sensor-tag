@@ -34,7 +34,7 @@ function WirelessTagAccessory(platform, device) {
     var that = this;
     
     //hide motion/contact/temperature if device is in humidity only
-    if (platform.humidityOnlySensors.indexOf(that.device.name) == 0) {
+    if (platform.humidityOnlySensors.indexOf(that.device.name) < 0) {
 
         // Motion
         if (platform.motionSensors.indexOf(that.device.name) >= 0) {
