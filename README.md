@@ -23,7 +23,7 @@ Configuration sample:
             "queryFrequency": 20000,
             "motionSensors": [],
             "contactSensors": ["Mailbox"],
-            "humidityOnlySensors" []    //for use of water-sensors
+            "humidityOnlySensors": []    //for use of water-sensors
         }
     ] 
 ```
