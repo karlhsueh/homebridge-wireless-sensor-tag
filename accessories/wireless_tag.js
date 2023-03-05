@@ -33,7 +33,7 @@ function WirelessTagAccessory(platform, device) {
     
     var that = this;
     
-    //hide motion/contact/temperature if device is in humidity only
+    //hide motion/contact/temperature/light if device is in humidity only
     if (platform.humidityOnlySensors.indexOf(that.device.name) < 0) {
 
         // Motion
@@ -70,6 +70,17 @@ function WirelessTagAccessory(platform, device) {
             .on('get', function(callback) {
             callback(null, that.device.temperature);
         });
+
+        // Light
+        this.addService(Service.LightSensor)
+            .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+            .setProps({
+                minValue: 0,
+                maxValue: 200000
+            })
+            .on('get', function(callback) {
+            callback(null, that.device.lux);
+        });        
     }
 
     // Humidity
@@ -107,7 +118,7 @@ var getServices = function() {
 
 var loadData = function() {
 
-    //hide motion/contact/temperature if device is in humidity only
+    //hide motion/contact/temperature/light if device is in humidity only
     if (this.platform.humidityOnlySensors.indexOf(this.name) == 0) {
 
         // Motion
@@ -128,6 +139,11 @@ var loadData = function() {
         this.getService(Service.TemperatureSensor)
             .getCharacteristic(Characteristic.CurrentTemperature)
             .getValue();
+
+        // Light
+        this.getService(Service.LightSensor)
+            .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+            .getValue();        
     }
 
     // Humidity
