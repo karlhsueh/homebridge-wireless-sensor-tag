@@ -1,6 +1,6 @@
 {
   "name": "homebridge-wireless-sensor-tag-forked",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Homebridge platform plugin for wireless tags (http://wirelesstags.net)",
   "note": "",
   "main": "index.js",
@@ -33,7 +33,7 @@
     "unirest": ""
   },
   "author": "rodtoll",
-  "contributors": ["gurase", "jeabraham"],
+  "contributors": ["gurase", "jeabraham", "plenipotentss", "karlhsueh"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/karlhsueh/homebridge-wireless-sensor-tag/issues"
